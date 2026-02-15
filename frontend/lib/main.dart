@@ -48,6 +48,16 @@ class _ConverterPageState extends State<ConverterPage> {
       return;
     }
 
+    // Absolute zero: -273.15 °C / -459.67 °F
+    if (_celsiusToFahrenheit && input < -273.15) {
+      setState(() => _result = 'Error: below absolute zero (-273.15 °C).');
+      return;
+    }
+    if (!_celsiusToFahrenheit && input < -459.67) {
+      setState(() => _result = 'Error: below absolute zero (-459.67 °F).');
+      return;
+    }
+
     setState(() => _loading = true);
     try {
       if (_celsiusToFahrenheit) {
@@ -89,14 +99,17 @@ class _ConverterPageState extends State<ConverterPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SegmentedButton<bool>(
-                  segments: const [
-                    ButtonSegment(value: true, label: Text('°C → °F')),
-                    ButtonSegment(value: false, label: Text('°F → °C')),
-                  ],
-                  selected: {_celsiusToFahrenheit},
-                  onSelectionChanged: (v) =>
-                      setState(() => _celsiusToFahrenheit = v.first),
+                SizedBox(
+                  width: double.infinity,
+                  child: SegmentedButton<bool>(
+                    segments: const [
+                      ButtonSegment(value: true, label: Text('°C → °F')),
+                      ButtonSegment(value: false, label: Text('°F → °C')),
+                    ],
+                    selected: {_celsiusToFahrenheit},
+                    onSelectionChanged: (v) =>
+                        setState(() => _celsiusToFahrenheit = v.first),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
